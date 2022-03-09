@@ -64,6 +64,12 @@ public class Testautonomie extends LinearOpMode {
     private DcMotor slider=null;
     private ElapsedTime runtime = new ElapsedTime();
 
+    private static final int TICKS_PER_REV = 1150;
+    private static final float PI = 3.1415f;
+    private static final float GEAR_REDUCTION = 2.0f;
+    private static final float  WHEEL_DIAMETER =  PI * 10;
+    private static final float COUNTS_PER_INCH = (TICKS_PER_REV * GEAR_REDUCTION)/(WHEEL_DIAMETER  * PI);
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -99,18 +105,29 @@ public class Testautonomie extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            SLIDER_UP(0.8,60);
-            SLIDER_DOWN(0.8,600);
-            /*TURN_FORWARD(0.5,300);
-            TURN_ROTATEL(0.5,800);
-            TURN_FORWARD(0.5,300);
-            TURN_ROTATER(0.5,800);
-            TURN_FORWARD(0.5,300);*/
+            forward(10);
             Stop();
         }
 
     }
 
+    public void reset_encoders(){
+        back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+    public float cm_to_int(double cm){
+        return (float)(cm/2.54);
+    }
+    public void forward(int centimeters){
+
+        front_left.setTargetPosition(front_left.getCurrentPosition() + (int)(cm_to_int(centimeters) *COUNTS_PER_INCH));
+        front_right.setTargetPosition(front_right.getCurrentPosition() + (int)(cm_to_int(centimeters) *COUNTS_PER_INCH));
+        back_left.setTargetPosition(back_left.getCurrentPosition() + (int)(cm_to_int(centimeters) *COUNTS_PER_INCH));
+        back_right.setTargetPosition(back_right.getCurrentPosition() + (int)(cm_to_int(centimeters) *COUNTS_PER_INCH));
+
+    }
     public void SLIDER_UP (double power, long time) {
         slider.setPower(power);
         sleep(time);
