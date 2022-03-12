@@ -66,9 +66,9 @@ public class autonomietestt extends LinearOpMode {
 
     private static final int TICKS_PER_REV = 1150;
     private static final float PI = 3.1415f;
-    private static final float GEAR_REDUCTION = 2.0f;
+    //private static final float GEAR_REDUCTION = 2.0f;
     private static final double  WHEEL_CIRCUMFERENCE =  PI * 3.93;
-    private static final double COUNTS_PER_INCH = (TICKS_PER_REV * GEAR_REDUCTION)/(WHEEL_CIRCUMFERENCE  * PI);
+    // private static final double COUNTS_PER_INCH = (TICKS_PER_REV * GEAR_REDUCTION)/(WHEEL_CIRCUMFERENCE  * PI);
     private static float distanta =0;
     private static float pozitie=0;
     @Override
@@ -83,11 +83,11 @@ public class autonomietestt extends LinearOpMode {
         front_right=hardwareMap.get(DcMotor.class, "FR");
         back_left=hardwareMap.get(DcMotor.class, "BL");
         back_right=hardwareMap.get(DcMotor.class, "BR");
-        slider=hardwareMap.get(DcMotor.class, "SD");
+        //slider=hardwareMap.get(DcMotor.class, "SD");
 
-        front_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        front_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        back_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        front_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        front_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        back_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //slider.setMode(DcMotor.RunMode.RUN_WITHOUD_ENCODER);
 
@@ -98,7 +98,7 @@ public class autonomietestt extends LinearOpMode {
         front_right.setDirection(DcMotor.Direction.REVERSE);
         back_left.setDirection(DcMotor.Direction.FORWARD);
         back_right.setDirection(DcMotor.Direction.FORWARD);
-        slider.setDirection(DcMotor.Direction.REVERSE);
+        //slider.setDirection(DcMotor.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -108,10 +108,10 @@ public class autonomietestt extends LinearOpMode {
         while (opModeIsActive()) {
             reset_encoders();
             run_to_position();
-            forward(1);
+            forward(cm_to_inch(10));
             FORWARD(0.3);
             while(front_left.isBusy()&& front_right.isBusy() && back_left.isBusy() && back_right.isBusy()){
-                telemetry.addData("1",pozitie);
+                telemetry.addData("10 cm",pozitie);
                 telemetry.update();
             }
             Stop();
@@ -123,28 +123,29 @@ public class autonomietestt extends LinearOpMode {
         }
 
     }
+
     public void run_to_position(){
-        back_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // back_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         back_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        front_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //front_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //front_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     public void reset_encoders(){
-        back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //back_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         back_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //front_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //front_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-    public float cm_to_int(double cm){
+    public float cm_to_inch(double cm){
         return (float)(cm/2.54);
     }
-    public void forward(int inches){
+    public void forward(float inches){
 
         front_left.setTargetPosition((int)((inches/WHEEL_CIRCUMFERENCE)*TICKS_PER_REV));
         front_right.setTargetPosition((int)((inches/WHEEL_CIRCUMFERENCE)*TICKS_PER_REV));
         back_left.setTargetPosition((int)((inches/WHEEL_CIRCUMFERENCE)*TICKS_PER_REV));
         back_right.setTargetPosition((int)((inches/WHEEL_CIRCUMFERENCE)*TICKS_PER_REV));
-        //est_distanta = front_left.getCurrentPosition() + (int)(cm_to_int(centimeters) *COUNTS_PER_INCH);
+        //test_distanta = front_left.getCurrentPosition() + (int)(cm_to_int(centimeters) *COUNTS_PER_INCH);
     }
     public void SLIDER_UP (double power, long time) {
         slider.setPower(power);
@@ -160,7 +161,7 @@ public class autonomietestt extends LinearOpMode {
         front_left.setPower (power);
         front_right.setPower (power);
         back_left.setPower (power);
-        back_right.setPower (power);
+        //back_right.setPower (power);
     }
 
 

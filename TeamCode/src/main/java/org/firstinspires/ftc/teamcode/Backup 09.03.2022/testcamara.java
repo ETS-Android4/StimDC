@@ -74,8 +74,7 @@ public class testcamara extends LinearOpMode {
     };
     private static final String message_object="Object detected";
     private static boolean isDuckDetected = false;
-    private static boolean isCubeDetected = false;
-    private static boolean isMarkerDetected = false;
+    private static boolean isTEDetected = false;
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
      * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
@@ -123,7 +122,7 @@ public class testcamara extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(2.5, 16.0/9.0);
+            tfod.setZoom(1.5, 16.0/9.0);
         }
 
         /** Wait for the game to begin */
@@ -149,21 +148,15 @@ public class testcamara extends LinearOpMode {
                                 recognition.getRight(), recognition.getBottom());
                         i++;
 
-                        if(recognition.getLabel().equals("Duck")){
-                            isDuckDetected= true;
-                        }else{
-                            isDuckDetected = false;
+                        if(recognition.getLabel().equals("Duck") && isDuckDetected == false) {
+                            isDuckDetected = true;
+                            telemetry.addData(message_object, recognition.getLabel());
                         }
-                          if (recognition.getLabel().equals("Cube")) {
-                              isCubeDetected = true;
-                          }else{
-                              isCubeDetected = false;
+                        if(recognition.getLabel().equals(null) && isTEDetected == false){
+                            isTEDetected = true;
+                            telemetry.addData("Detected","Team Shiping element");
+                        }
 
-                          }
-                          if(recognition.getLabel().equals("Marker")){
-                              isMarkerDetected = true;
-                          }
-                          telemetry.addData(message_object, recognition.getLabel());
                       }
                       telemetry.update();
                     }
@@ -180,7 +173,6 @@ public class testcamara extends LinearOpMode {
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraName = hardwareMap.get(WebcamName.class, "wb");
 
